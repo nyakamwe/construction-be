@@ -1,0 +1,37 @@
+{
+  "name": "construction-be",
+  "version": "1.0.0",
+  "description": "This implement some backend functionality on construction project",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "npm run migrate && node index.js",
+    "migrate": "npx sequelize-cli db:migrate",
+    "unmigrate": "npx sequelize-cli db:migrate:undo:all",
+    "seed": "npx sequelize-cli db:seed:all",
+    "seed-admin": "npx sequelize-cli db:seed --seed 20221015140743-admin-user"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nyakamwe/construction-be.git"
+  },
+  "author": "nyakamwe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nyakamwe/construction-be/issues"
+  },
+  "homepage": "https://github.com/nyakamwe/construction-be#readme",
+  "devDependencies": {
+    "sequelize-cli": "^6.5.1"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^8.8.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.25.1"
+  }
+}
