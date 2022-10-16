@@ -20,8 +20,6 @@ const add_project = async(req, res)=>{
 				crop:'fill'
 
 			})
-			// const imageUrl = cloud_save ? cloud_save.url : 
-			// new post
 			const project = new Project({
 				title: req.body.title,
 				description: req.body.description,
@@ -34,9 +32,9 @@ const add_project = async(req, res)=>{
 	
 			return res.status(201).json({
 				status:201, 
-				message:"Project Saved successfully", 
-				success: true,
-				imageUrl:`${cloud_save.url}`
+                project,
+                message:"Project Saved successfully", 
+				success: true
 			})
 		}
     }    
@@ -44,4 +42,77 @@ const add_project = async(req, res)=>{
         return res.status(500).json({error: error.message})
     }
 }
-module.exports = {get_all_projects, add_project}
+
+const project_get_one = async (req, res) => {
+	try {
+		const project = await Project.findOne({where:{ id: req.params.id }})
+
+		if(project === null){
+			return res.status(404).json({status: 404, message:"Project of that id is not available"});
+		}
+
+		return res.status(200).json({status: 200, project, message:"successfully fetched"});
+
+	} catch(error) {
+		return res.status(500).json({message: "Internal Server Error"})
+	}
+}
+
+const project_del = async (req, res) => {
+	try {
+		const project = await Project.findOne({where:{id:req.params.id}})
+		if(project != null){
+
+			await project.destroy();
+			return res.status(200).json({status: 200, message: "Project deleted successfully!"})
+		}
+		else{
+			return res.status(404).json({error: "Project doesn't exist!"})
+		}
+
+		
+	} catch(error) {
+		return res.status(500).json({error: "Internal Server error", message:error.message })
+	}
+}
+
+const project_update = async (req, res) => {
+	try {
+		const project = await Project.findOne({where:{ id: req.params.id }})
+		if(project){
+			if(req.file){
+
+				const cloud_save = await cloudinary.uploader.upload(req.file.path, {
+					with:500,
+					height:500,
+					crop:'fill'
+		
+				})
+				project.title = req.body.title || project.title,
+				project.description = req.body.description || project.description
+				project.image = cloud_save.url
+
+				project.save()
+				return res.status(200).json({status: 200, message:"Project successfully updated!"});
+
+			}else{
+				project.title = req.body.title || project.title,
+				project.description = req.body.description || project.description
+				project.image = project.image
+
+				project.save()
+				return res.status(200).json({status: 200, message:"Project successfully updated!"});
+			}
+			
+		}
+		else{
+			return res.status(404).json({message: "Project doesn't exist!"})
+		}
+
+	} catch(error) {
+		return res.status(500).json({error: error.message, message:'Internal server error'})
+	}
+}
+
+
+module.exports = {get_all_projects, add_project, project_get_one, project_del, project_update}
