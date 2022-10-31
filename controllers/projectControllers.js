@@ -91,7 +91,8 @@ const project_update = async (req, res) => {
 				project.title = req.body.title || project.title,
 				project.description = req.body.description || project.description
 				project.image = cloud_save.url
-
+				
+				console.log('project', project)
 				project.save()
 				return res.status(200).json({status: 200, message:"Project successfully updated!"});
 

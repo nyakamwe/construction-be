@@ -5,10 +5,10 @@ const upload = require('../uploadConfig')
 
 const router = express.Router();
 
-router.get("/projects", authenticateToken, get_all_projects)
+router.get("/projects", get_all_projects)
 router.post("/projects", authenticateToken, upload.single('image'), add_project)
-router.get("/projects/:id", authenticateToken, project_get_one)
+router.get("/projects/:id", project_get_one)
 router.delete("/projects/:id", authenticateToken, project_del)
-router.put("/projects/:id", authenticateToken, project_update)
+router.put("/projects/:id", authenticateToken, upload.single('image'), project_update)
 
 module.exports = router
