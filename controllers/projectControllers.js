@@ -2,8 +2,8 @@ const {Project} = require('../models/index')
 const cloudinary = require('../imageUploader')
 
 const get_all_projects = async(req,res)=>{
-    const projects = await Project.findAll()
-    return res.status(200).json({success: true, status:200, projects})
+    const projects = await Project.findAll({where: {status: 'active'}})
+    return res.status(200).json({count: projects.length, success: true, status:200, projects})
 }
 
 const add_project = async(req, res)=>{
@@ -30,12 +30,14 @@ const add_project = async(req, res)=>{
 			
 			await project.save()
 	
-			return res.status(201).json({
-				status:201, 
-                project,
-                message:"Project Saved successfully", 
-				success: true
-			})
+			return delete project.get().status && 
+				res.status(201).json({
+					status:201, 
+					project,
+					message:"Project Saved successfully", 
+					success: true
+				})
+			
 		}
     }    
     catch (error) {
@@ -63,7 +65,7 @@ const project_del = async (req, res) => {
 		const project = await Project.findOne({where:{id:req.params.id}})
 		if(project != null){
 
-			await project.destroy();
+			await project.update({status: 'inactive'});
 			return res.status(200).json({status: 200, message: "Project deleted successfully!"})
 		}
 		else{
@@ -78,7 +80,7 @@ const project_del = async (req, res) => {
 
 const project_update = async (req, res) => {
 	try {
-		const project = await Project.findOne({where:{ id: req.params.id }})
+		const project = await Project.findOne({where:{ id: req.params.id, status: 'active' }})
 		if(project){
 			if(req.file){
 
@@ -90,19 +92,25 @@ const project_update = async (req, res) => {
 				})
 				project.title = req.body.title || project.title,
 				project.description = req.body.description || project.description
-				project.image = cloud_save.url
+				project.image = cloud_save.url,
+				project.status = req.body.status || project.status
 				
-				console.log('project', project)
 				project.save()
 				return res.status(200).json({status: 200, message:"Project successfully updated!"});
 
 			}else{
-				project.title = req.body.title || project.title,
-				project.description = req.body.description || project.description
-				project.image = project.image
+				try {
+					project.title = req.body.title || project.title,
+					project.description = req.body.description || project.description
+					project.image = project.image,
+					project.status = req.body.status || project.status
 
-				project.save()
-				return res.status(200).json({status: 200, message:"Project successfully updated!"});
+					project.save()
+					return res.status(200).json({status: 200, message:"Project successfully updated!"});
+				} catch (error) {
+					return res.status(400).json({error});
+					
+				}
 			}
 			
 		}

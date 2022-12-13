@@ -16,7 +16,12 @@ module.exports = (sequelize, DataTypes) => {
   Project.init({
     title: DataTypes.STRING,
     description: DataTypes.STRING,
-    image: DataTypes.STRING
+    image: DataTypes.STRING,
+    status: {
+      type: DataTypes.ENUM('active', 'inactive'),
+      allowNull: false,
+      defaultValue: 'active'
+    }
   }, {
     sequelize,
     modelName: 'Project',
