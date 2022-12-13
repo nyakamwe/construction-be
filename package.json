@@ -9,7 +9,8 @@
     "migrate": "npx sequelize-cli db:migrate",
     "unmigrate": "npx sequelize-cli db:migrate:undo:all",
     "seed": "npx sequelize-cli db:seed:all",
-    "seed-admin": "npx sequelize-cli db:seed --seed 20221015140743-admin-user"
+    "seed-admin": "npx sequelize-cli db:seed --seed 20221015140743-admin-user",
+    "seed-profile": "npx sequelize-cli db:seed --seed 20221213090126-profile"
   },
   "repository": {
     "type": "git",
