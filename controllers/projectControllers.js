@@ -24,8 +24,6 @@ const add_project = async(req, res)=>{
 				title: req.body.title,
 				description: req.body.description,
 				image: cloud_save.url
-				
-				
 			})
 			
 			await project.save()
