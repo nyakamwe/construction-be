@@ -16,7 +16,11 @@ module.exports = (sequelize, DataTypes) => {
   Project.init({
     title: DataTypes.STRING,
     description: DataTypes.STRING,
-    image: DataTypes.STRING,
+    images: DataTypes.ARRAY(DataTypes.STRING),
+    duration: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     status: {
       type: DataTypes.ENUM('active', 'inactive'),
       allowNull: false,

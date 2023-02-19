@@ -15,8 +15,15 @@ module.exports = {
       description: {
         type: Sequelize.STRING
       },
-      image: {
-        type: Sequelize.STRING
+      images: Sequelize.ARRAY(Sequelize.STRING),
+      duration: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      status: {
+          type: Sequelize.ENUM('active', 'inactive'),
+          allowNull: false,
+          defaultValue: 'active'
       },
       createdAt: {
         allowNull: false,
